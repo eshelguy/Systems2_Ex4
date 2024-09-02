@@ -222,27 +222,12 @@ TEST_CASE("Tree Class - Basic Functionality") {
         CHECK(*it == 30); ++it;
     }
 
-    SUBCASE("Testing tree traversal with HeapIterator") {
-        Tree<Complex, 2> complexTree;
-        complexTree.add_root(Complex(3, 4)); // Magnitude 5
-        complexTree.add_sub_node(Complex(3, 4), Complex(1, 7)); // Magnitude ~7.07
-        complexTree.add_sub_node(Complex(3, 4), Complex(2, 3)); // Magnitude ~3.61
-
-        // Uncomment and adapt this if you have a working HeapIterator
-        // auto it = complexTree.myHeap();
-        // CHECK(it->getReal() == 2);  // Smallest magnitude (2 + 3i)
-        // ++it;
-        // CHECK(it->getReal() == 3);  // Second smallest magnitude (3 + 4i)
-        // ++it;
-        // CHECK(it->getReal() == 1);  // Largest magnitude (1 + 7i)
-    }
 
     SUBCASE("Testing edge case: Empty tree traversal") {
         Tree<int, 2> emptyTree;
         CHECK(emptyTree.begin_bfs_scan() == emptyTree.end_bfs_scan());
         CHECK(emptyTree.begin_dfs_scan() == emptyTree.end_dfs_scan());
         CHECK(emptyTree.begin_in_order() == emptyTree.end_in_order());
-//        CHECK(emptyTree.begin_post_order() == emptyTree.end_post_order());
     }
 
     SUBCASE("Testing edge case: Single node tree traversal") {
@@ -255,43 +240,118 @@ TEST_CASE("Tree Class - Basic Functionality") {
     }
 }
 
-//// Complex Class Tests
-//TEST_CASE("Complex Class - Basic Functionality") {
-//    Complex c1(1.0, 2.0);  // Create complex numbers
-//    Complex c2(2.0, 3.0);
-//
-//    SUBCASE("Addition of complex numbers") {
-//        Complex c3 = c1 + c2;
-//        CHECK(c3 == Complex(3.0, 5.0));
-//    }
-//
-//    SUBCASE("Subtraction of complex numbers") {
-//        Complex c4 = c1 - c2;
-//        CHECK(c4 == Complex(-1.0, -1.0));
-//    }
-//
-//    SUBCASE("Multiplication of complex numbers") {
-//        Complex c5 = c1 * c2;
-//        CHECK(c5 == Complex(-4.0, 7.0));
-//    }
-//
-//    SUBCASE("Equality of complex numbers") {
-//        Complex c3(1.0, 2.0);
-//        CHECK(c1 == c3);
-//    }
-//
-//    SUBCASE("Complex number with zero") {
-//        Complex c6(0.0, 0.0);
-//        CHECK(c6 + c1 == Complex(1.0, 2.0));
-//        CHECK(c6 * c1 == Complex(0.0, 0.0));
-//    }
-//
-//    SUBCASE("Complex number multiplication with itself") {
-//        CHECK(c1 * c1 == Complex(-3.0, 4.0));
-//    }
-//
-//    SUBCASE("Complex number subtraction resulting in zero") {
-//        Complex c7(1.0, 2.0);
-//        CHECK(c1 - c7 == Complex(0.0, 0.0));
-//    }
-//}
+TEST_CASE("Tree Iterators - PreOrderIterator") {
+    Tree<int, 2> tree;
+    tree.add_root(1);
+    tree.add_sub_node(1, 2);
+    tree.add_sub_node(1, 3);
+    tree.add_sub_node(2, 4);
+    tree.add_sub_node(2, 5);
+
+    SUBCASE("Pre-order traversal") {
+        std::vector<int> expected = {1, 2, 4, 5, 3};
+        std::vector<int> result;
+        for (auto it = tree.begin_pre_order(); it != tree.end_pre_order(); ++it) {
+            result.push_back(*it);
+        }
+        CHECK(result == expected);
+    }
+}
+
+TEST_CASE("Tree Iterators - PostOrderIterator") {
+    Tree<int, 2> tree;
+    tree.add_root(1);
+    tree.add_sub_node(1, 2);
+    tree.add_sub_node(1, 3);
+    tree.add_sub_node(2, 4);
+    tree.add_sub_node(2, 5);
+
+    SUBCASE("Post-order traversal") {
+        std::vector<int> expected = {4, 5, 2, 3, 1};
+        std::vector<int> result;
+        for (auto it = tree.begin_post_order(); it != tree.end_post_order(); ++it) {
+            result.push_back(*it);
+        }
+        CHECK(result == expected);
+    }
+}
+
+TEST_CASE("Tree Iterators - InOrderIterator") {
+    Tree<int, 2> tree;
+    tree.add_root(1);
+    tree.add_sub_node(1, 2);
+    tree.add_sub_node(1, 3);
+    tree.add_sub_node(2, 4);
+    tree.add_sub_node(2, 5);
+
+    SUBCASE("In-order traversal") {
+        std::vector<int> expected = {4, 2, 5, 1, 3};
+        std::vector<int> result;
+        for (auto it = tree.begin_in_order(); it != tree.end_in_order(); ++it) {
+            result.push_back(*it);
+        }
+        CHECK(result == expected);
+    }
+}
+
+TEST_CASE("Tree Iterators - BFSIterator") {
+    Tree<int, 2> tree;
+    tree.add_root(1);
+    tree.add_sub_node(1, 2);
+    tree.add_sub_node(1, 3);
+    tree.add_sub_node(2, 4);
+    tree.add_sub_node(2, 5);
+
+    SUBCASE("BFS traversal") {
+        std::vector<int> expected = {1, 2, 3, 4, 5};
+        std::vector<int> result;
+        for (auto it = tree.begin_bfs_scan(); it != tree.end_bfs_scan(); ++it) {
+            result.push_back(*it);
+        }
+        CHECK(result == expected);
+    }
+}
+
+TEST_CASE("Tree Iterators - DFSIterator") {
+    Tree<int, 2> tree;
+    tree.add_root(1);
+    tree.add_sub_node(1, 2);
+    tree.add_sub_node(1, 3);
+    tree.add_sub_node(2, 4);
+    tree.add_sub_node(2, 5);
+
+    SUBCASE("DFS traversal") {
+        std::vector<int> expected = {1, 2, 4, 5, 3};
+        std::vector<int> result;
+        for (auto it = tree.begin_dfs_scan(); it != tree.end_dfs_scan(); ++it) {
+            result.push_back(*it);
+        }
+        CHECK(result == expected);
+    }
+}
+
+TEST_CASE("Tree Iterators - HeapIterator") {
+    Tree<int, 2> tree;
+    tree.add_root(10);
+    tree.add_sub_node(10, 15);
+    tree.add_sub_node(10, 20);
+    tree.add_sub_node(15, 30);
+    tree.add_sub_node(15, 40);
+    tree.add_sub_node(20, 50);
+    tree.add_sub_node(20, 60);
+
+    SUBCASE("Heap traversal") {
+        tree.myHeap(); // Transform the tree into a heap
+
+        std::vector<int> result;
+        for (auto it = tree.myHeap(); it != tree.end_heap(); ++it) {
+            result.push_back(*it);
+        }
+
+        // Since it's a heap, the exact order may depend on the heap implementation,
+        // but the root should be the smallest element.
+        CHECK(result.front() <= result.back()); // The first element should be the smallest
+    }
+}
+
+

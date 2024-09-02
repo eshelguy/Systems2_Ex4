@@ -10,12 +10,18 @@
 #include <memory>
 #include "Node.hpp"
 
+
+// * all the implementation are in the tree.hpp file
+// * when we use templates we cannot create implementation in cpp file.
+
+
 /**
  * @brief A generic k-ary tree class.
  *
  * @tparam T The type of the values stored in the nodes.
  * @tparam k The maximum number of children each node can have. Defaults to 2 (binary tree).
  */
+
 template<typename T, int k = 2>
 class Tree {
 private:
@@ -31,7 +37,9 @@ public:
     /**
     * @brief Destructor that resets the root.
     */
-    ~Tree() { root.reset(); }
+    ~Tree() {
+        root.reset();
+    }
 
     /**
     * @brief Gets the root of the tree.
@@ -83,7 +91,8 @@ public:
     }
 
 
-    // Iterators for various tree traversals
+// Iterators for various tree traversals
+
 /**-----------------------------------Pre Order Iterator-------------------------------------------**/
 
 /**
@@ -158,7 +167,7 @@ public:
  *
  * @return A PreOrderIterator pointing to the root of the tree.
  */
-    const PreOrderIterator begin_pre_order() const {
+    PreOrderIterator begin_pre_order() const {
         return PreOrderIterator(root, k_ary);
     }
 
@@ -167,7 +176,7 @@ public:
  *
  * @return A PreOrderIterator that represents the end of the traversal.
  */
-    const PreOrderIterator end_pre_order() const {
+    PreOrderIterator end_pre_order() const {
         return PreOrderIterator(nullptr, k_ary);
     }
 
@@ -276,7 +285,7 @@ public:
  *
  * @return A PostOrderIterator pointing to the root of the tree.
  */
-    const PostOrderIterator begin_post_order() const {
+    PostOrderIterator begin_post_order() const {
         return PostOrderIterator(root, k_ary);
     }
 
@@ -285,7 +294,7 @@ public:
  *
  * @return A PostOrderIterator that represents the end of the traversal.
  */
-    const PostOrderIterator end_post_order() const {
+    PostOrderIterator end_post_order() const {
         return PostOrderIterator(nullptr, k_ary);
     }
 
@@ -371,7 +380,7 @@ public:
  *
  * @return An InOrderIterator pointing to the root of the tree.
  */
-    const InOrderIterator begin_in_order() const {
+    InOrderIterator begin_in_order() const {
         return InOrderIterator(root, k_ary);
     }
 
@@ -380,7 +389,7 @@ public:
  *
  * @return An InOrderIterator that represents the end of the traversal.
  */
-    const InOrderIterator end_in_order() const {
+    InOrderIterator end_in_order() const {
         return InOrderIterator(nullptr, k_ary);
     }
 
@@ -402,7 +411,7 @@ public:
          *
          * @param root The root node to start the traversal from.
          */
-        BFSIterator(std::shared_ptr<Node<T>> root) {
+        explicit BFSIterator(std::shared_ptr<Node<T>> root) {
             if (root) queue.push(root);
         }
 
@@ -455,7 +464,7 @@ public:
  *
  * @return A BFSIterator pointing to the root of the tree.
  */
-    const BFSIterator begin_bfs_scan() const {
+    BFSIterator begin_bfs_scan() const {
         return BFSIterator(root);
     }
 
@@ -464,7 +473,7 @@ public:
  *
  * @return A BFSIterator that represents the end of the traversal.
  */
-    const BFSIterator end_bfs_scan() const {
+    BFSIterator end_bfs_scan() const {
         return BFSIterator(nullptr);
     }
 
@@ -485,7 +494,7 @@ public:
          *
          * @param root The root node to start the traversal from.
          */
-        DFSIterator(std::shared_ptr<Node<T>> root) {
+        explicit DFSIterator(std::shared_ptr<Node<T>> root) {
             if (root) stack.push(root);
         }
 
@@ -538,7 +547,7 @@ public:
  *
  * @return A DFSIterator pointing to the root of the tree.
  */
-    const DFSIterator begin_dfs_scan() const {
+    DFSIterator begin_dfs_scan() const {
         return DFSIterator(root);
     }
 
@@ -547,72 +556,25 @@ public:
  *
  * @return A DFSIterator that represents the end of the traversal.
  */
-    const DFSIterator end_dfs_scan() const {
+    DFSIterator end_dfs_scan() const {
         return DFSIterator(nullptr);
     }
 
 
 /**---------------------------------------Heap Iterator-------------------------------------------**/
 
-/**
- * @brief An iterator for traversing the nodes of the tree in heap order.
- *
- * Heap traversal visits nodes in the order of a min-heap, where the smallest element is visited first.
- * This iterator uses a vector to store nodes and sorts them according to the heap property.
- */
     class HeapIterator {
     private:
-        std::vector<std::shared_ptr<Node<T>>> heapNodes;  ///< Vector to hold nodes in heap order.
-        typename std::vector<std::shared_ptr<Node<T>>>::iterator it;  ///< Iterator to traverse the heapNodes.
-
-        /**
-         * @brief Creates a heap from the nodes of the tree.
-         *
-         * This function collects all nodes and sorts them into a heap.
-         *
-         * @param root The root node of the tree to start the heap creation.
-         */
-        void createHeap(std::shared_ptr<Node<T>>& root) {
-            if (!root) return;
-
-            std::vector<std::shared_ptr<Node<T>>> nodes;
-            collectNodes(root, nodes);
-
-            auto comparator = [](const std::shared_ptr<Node<T>>& lhs, const std::shared_ptr<Node<T>>& rhs) {
-                return lhs->get_value() > rhs->get_value();
-            };
-            std::make_heap(nodes.begin(), nodes.end(), comparator);
-            std::sort_heap(nodes.begin(), nodes.end(), comparator);
-
-            heapNodes = nodes;
-            it = heapNodes.begin();
-        }
-
-        /**
-         * @brief Collects all nodes from the tree recursively.
-         *
-         * This function is used to gather all nodes in a vector for heap creation.
-         *
-         * @param node The current node being collected.
-         * @param nodes The vector to store the collected nodes.
-         */
-        void collectNodes(const std::shared_ptr<Node<T>>& node, std::vector<std::shared_ptr<Node<T>>>& nodes) {
-            if (!node) return;
-
-            nodes.push_back(node);
-            for (const auto& child : node->get_children()) {
-                collectNodes(child, nodes);
-            }
-        }
+        std::queue<std::shared_ptr<Node<T>>> queue;  ///< Queue to hold nodes for traversal.
 
     public:
         /**
-         * @brief Constructs a HeapIterator for the given tree root.
+         * @brief Constructs a HeapIterator starting at the given root.
          *
-         * @param root The root node to start the heap creation.
+         * @param root The root node to start the traversal from.
          */
-        HeapIterator(const std::shared_ptr<Node<T>>& root) {
-            createHeap(root);
+        explicit HeapIterator(std::shared_ptr<Node<T>> root) {
+            if (root) queue.push(root);
         }
 
         /**
@@ -620,17 +582,8 @@ public:
          *
          * @return A reference to the value of the current node.
          */
-        T& operator*() {
-            return (*it)->get_value();
-        }
-
-        /**
-         * @brief Provides a pointer-like interface to access the current node's value.
-         *
-         * @return A pointer to the current node.
-         */
-        Node<T>* operator->() {
-            return it->get();
+        T& operator*() const {
+            return queue.front()->get_value();
         }
 
         /**
@@ -639,7 +592,11 @@ public:
          * @return A reference to the updated iterator.
          */
         HeapIterator& operator++() {
-            ++it;
+            auto node = queue.front();
+            queue.pop();
+            for (auto& child : node->get_children()) {
+                if (child) queue.push(child);
+            }
             return *this;
         }
 
@@ -650,18 +607,40 @@ public:
          * @return True if the iterators are not equal, false otherwise.
          */
         bool operator!=(const HeapIterator& other) const {
-            return it != other.it;
+            return !(*this == other);
+        }
+
+        /**
+         * @brief Checks if two iterators are equal.
+         *
+         * @param other The other iterator to compare with.
+         * @return True if the iterators are equal, false otherwise.
+         */
+        bool operator==(const HeapIterator& other) const {
+            return queue.empty() == other.queue.empty();
         }
     };
 
-/**
- * @brief Creates a HeapIterator for the tree.
- *
- * @return A HeapIterator for the tree.
- */
-    HeapIterator myHeap() const {
+
+    /**
+     * @brief Transforms the tree into a minimum heap and returns an iterator for the heap.
+     *
+     * @return A HeapIterator pointing to the root of the heap.
+     */
+    HeapIterator myHeap() {
+        heapify(root);  // Convert the tree into a heap
         return HeapIterator(root);
     }
+
+    /**
+     * @brief Returns an iterator representing the end of the heap traversal.
+     *
+     * @return A HeapIterator that represents the end of the traversal.
+     */
+    HeapIterator end_heap() const {
+        return HeapIterator(nullptr);
+    }
+
 
 /**---------------------------------------Helper Functions-------------------------------------------**/
     /**
@@ -692,6 +671,33 @@ public:
         }
 
         return os;
+    }
+
+    /**
+     * @brief Internal heapify function to convert a subtree into a min-heap.
+     *
+     * @param root The root of the subtree to heapify.
+     */
+    void heapify(std::shared_ptr<Node<T>> root) {
+        if (!root) return;
+
+        // Use size_t, which is the type returned by std::vector<T>::size()
+        for (size_t i = 0; i < root->get_children().size(); ++i) {
+            heapify(root->getChildAt(i));
+        }
+
+        // Now, check for the smallest child and swap if necessary
+        size_t smallest = 0;
+        for (size_t i = 1; i < root->get_children().size(); ++i) {
+            if (root->getChildAt(i) && root->getChildAt(i)->get_value() < root->getChildAt(smallest)->get_value()) {
+                smallest = i;
+            }
+        }
+
+        if (root->getChildAt(smallest) && root->getChildAt(smallest)->get_value() < root->get_value()) {
+            std::swap(root->get_value(), root->getChildAt(smallest)->get_value());
+            heapify(root->getChildAt(smallest));  // Heapify the affected subtree
+        }
     }
 
 private:

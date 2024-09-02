@@ -28,6 +28,11 @@ public:
      */
     void draw();
 
+    /**
+     * @brief Runs the main loop to handle events and draw the tree.
+     */
+    void run();
+
 private:
     Tree<T, K>* tree;  ///< Pointer to the tree to be visualized.
     sf::RenderWindow* window;  ///< Pointer to the SFML window where the tree will be drawn.
@@ -109,6 +114,22 @@ void TreeDrawer<T, K>::drawNode(const std::shared_ptr<Node<T>>& node, int x, int
     text.setFillColor(sf::Color::Black);
     text.setPosition(x - 20, y - 15); // Adjust position to center text
     window->draw(text);
+}
+
+template<typename T, int K>
+void TreeDrawer<T, K>::run() {
+    // Main loop
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window->close();
+        }
+
+        window->clear(sf::Color::White);
+        draw();
+        window->display();
+    }
 }
 
 

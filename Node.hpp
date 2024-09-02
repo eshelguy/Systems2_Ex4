@@ -7,6 +7,19 @@
 #include <vector>
 #include <algorithm>
 
+
+// * all the implementation are in the tree.hpp file
+// * when we use templates we cannot create implementation in cpp file.
+
+
+/**
+ * i have multiple iterators (PreOrderIterator, PostOrderIterator, InOrderIterator, etc.)
+ * that traverse the tree. These iterators need to keep references to nodes as they iterate. If i wiil used std::unique_ptr,
+ * it would be challenging to maintain these references without transferring ownership of the nodes,
+ * which would disrupt the tree structure.
+ */
+
+
 /**
  * @brief A class representing a node in a k-ary tree.
  *
@@ -21,16 +34,11 @@ private:
 public:
     /**
      * @brief Constructs a node with the given value and a fixed number of children.
-     *
-     * @param value The value stored in the node.
-     * @param k The maximum number of children the node can have.
      */
     Node(const T& value, size_t k = 2) : value(value), children(k, nullptr) {}
 
     /**
      * @brief Gets the value stored in the node.
-     *
-     * @return A reference to the value.
      */
     T& get_value() {  // Return a non-const reference to the value
         return value;

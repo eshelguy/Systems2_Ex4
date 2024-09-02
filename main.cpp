@@ -56,6 +56,13 @@ int main() {
     }
     std::cout << std::endl;
 
+    // DFS Traversal (Explicit)
+    std::cout << "DFS Traversal (Explicit):" << std::endl;
+    for (auto it = tree.begin_dfs_scan(); it != tree.end_dfs_scan(); ++it) {
+        std::cout << *it << " ";  // Expected output: 1 2 4 5 3 6 (Similar to Pre-Order)
+    }
+    std::cout << std::endl;
+
     // Creating a 3-ary tree with double values
     Tree<double, 3> three_ary_tree;
 
@@ -79,6 +86,23 @@ int main() {
     // Printing 3-ary Tree Structure
     std::cout << "3-ary Tree Structure:" << std::endl;
     std::cout << three_ary_tree; // Should print the 3-ary tree structure.
+
+    // Create a k-ary tree with integer values, where k = 2
+    Tree<int> intHeapTree;
+    intHeapTree.add_root(10);
+    intHeapTree.add_sub_node(10, 15);
+    intHeapTree.add_sub_node(10, 20);
+    intHeapTree.add_sub_node(15, 30);
+    intHeapTree.add_sub_node(15, 40);
+    intHeapTree.add_sub_node(20, 50);
+    intHeapTree.add_sub_node(20, 60);
+
+
+    std::cout << "Heap Order Traversal:" << std::endl;
+    for (auto it = intHeapTree.myHeap(); it != intHeapTree.end_heap(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
 
 
     // Create a binary tree with Complex values
@@ -106,10 +130,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    // Create the SFML window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Tree Visualization");
-    window.setVerticalSyncEnabled(false); // Disable VSync
-    window.setFramerateLimit(60); // Limits the frame rate to 60 FPS
+
 
     // Create a k-ary tree with integer values, where k = 3
     Tree<int, 3> intTree;
@@ -139,20 +160,16 @@ int main() {
     intTree.add_sub_node(6, 18);
     intTree.add_sub_node(6, 19);
 
+
+    // Create the SFML window
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Tree Visualization");
+    window.setVerticalSyncEnabled(false); // Disable VSync
+    window.setFramerateLimit(60); // Limits the frame rate to 60 FPS
+
     // Create the tree drawer
     TreeDrawer treeDrawer(&intTree, &window);
+    treeDrawer.run();
 
-    // Main loop
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
 
-        window.clear(sf::Color::White);
-        treeDrawer.draw();
-        window.display();
-    }
     return 0;
 }

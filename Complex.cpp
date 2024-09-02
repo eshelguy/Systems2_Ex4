@@ -4,14 +4,28 @@
 #include <cmath>
 #include <sstream>
 
-// Constructor
+/**
+ * @brief Constructs a complex number.
+ *
+ * @param r The real part of the complex number.
+ * @param i The imaginary part of the complex number.
+ */
 Complex::Complex(double r, double i) : real(r), imag(i) {}
 
-// Accessor methods
+/**
+ * @brief Gets the real part of the complex number.
+ *
+ * @return The real part.
+ */
 double Complex::getReal() const {
     return real;
 }
 
+/**
+ * @brief Gets the imaginary part of the complex number.
+ *
+ * @return The imaginary part.
+ */
 double Complex::getImag() const {
     return imag;
 }
@@ -23,13 +37,6 @@ bool Complex::operator<(const Complex& other) const {
 
 bool Complex::operator==(const Complex& other) const {
     return real == other.real && imag == other.imag;
-}
-
-// Convert to string for display
-std::string Complex::toString() const {
-    std::ostringstream oss;
-    oss << "(" << real << " + " << imag << "i)";
-    return oss.str();
 }
 
 // Overload the stream insertion operator for output
