@@ -160,7 +160,7 @@ This project relies on the following dependencies:
 - **SFML**: Simple and Fast Multimedia Library for 2D graphics. Install it using the package manager of your choice:
   - On Ubuntu: `sudo apt-get install libsfml-dev`
   - On macOS: `brew install sfml`
-- **CMake** (optional): For generating build files.
+- **Makefile**: For generating build files.
 - **g++**: GCC compiler for compiling the C++ code.
 
 Make sure these dependencies are installed before compiling and running the project.
